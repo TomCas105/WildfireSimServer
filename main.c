@@ -53,14 +53,10 @@ void *process_client_data(void *thread_data) {
     return NULL;
 }
 
-void receiveData(struct thread_data data, struct char_buffer receivedBuffer) {
-    data.clientMap = receivedBuffer.data;
-}
-
 void sendData(struct thread_data data) {
     struct char_buffer sendBuffer;
     char_buffer_init(&sendBuffer);
-    sendBuffer.data = data.clientMap;
+    char_buffer_append(&sendBuffer, data.clientMap, strlen(data.clientMap));
 
     active_socket_write_data(data.my_socket, &sendBuffer);
 
@@ -84,7 +80,9 @@ void consume(struct thread_data data) {
 
                 if (selector == "save") {
                     printf("%s", "prijimam data");
+                    data.clientMap = receivedData;
                 } else if (selector == "load") {
+                    printf("%s", "odosielam data");
                     sendData(data);
                 } else if (selector == "exit") {
                     break;
