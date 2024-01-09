@@ -28,17 +28,6 @@ void thread_data_destroy(struct thread_data *data) {
     data->clientMap = NULL;
 }
 
-void send_map(ACTIVE_SOCKET *socket, char *data) {
-    // Write map data to the socket
-    struct char_buffer mapBuffer;
-
-    char_buffer_init(&mapBuffer);
-    char_buffer_append(&mapBuffer, data, strlen(data));
-    active_socket_write_data(socket, &mapBuffer);
-    printf("Mapa poslana!\n");
-    char_buffer_destroy(&mapBuffer);
-}
-
 void *process_client_data(void *thread_data) {
     struct thread_data *data = thread_data;
     PASSIVE_SOCKET p_socket;
@@ -88,7 +77,8 @@ void consume(struct thread_data data) {
                     break;
                 }
 
-                free(selector);
+                //free(selector);
+                //free(receivedData);
             }
         }
 
@@ -102,7 +92,7 @@ int main() {
     struct thread_data data;
     struct active_socket my_socket;
     active_socket_init(&my_socket);
-    thread_data_init(&data, 11889, &my_socket);
+    thread_data_init(&data, 11887, &my_socket);
     pthread_create(&th_receive, NULL, process_client_data, &data);
     consume(data);
     pthread_join(th_receive, NULL);
